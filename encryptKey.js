@@ -4,7 +4,7 @@ require('dotenv').config();
 
 async function main(){
     try{
-        const provider = new JsonRpcProvider(process.env.BLOCKCHAIN_CONNECTION); // Assuming you have a provider defined somewhere
+        const provider = new JsonRpcProvider(process.env.RPC_URL);
         const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);   
         const encryptedKey = await wallet.encrypt(process.env.PASSWORD);
         console.log(encryptedKey);

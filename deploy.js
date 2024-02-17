@@ -4,10 +4,8 @@ require('dotenv').config();
 
 async function main(){
     try {
-        const provider = new JsonRpcProvider(process.env.BLOCKCHAIN_CONNECTION);
-        const encryptedPrivateKey = fs.readFileSync('./.encryptedKey.json','utf-8');
-        let wallet = ethers.Wallet.fromEncryptedJsonSync(encryptedPrivateKey, "abcd@123");
-        wallet = await wallet.connect(provider);
+        const provider = new JsonRpcProvider(process.env.RPC_URL);
+        const wallet = new ethers.Wallet(process.env.PRIVATE_KEY,provider); 
         
         const abi = fs.readFileSync("./SimpleStorage_sol_SimpleStorage.abi","utf-8");
         const binary = fs.readFileSync("./SimpleStorage_sol_SimpleStorage.bin","utf-8");
@@ -15,7 +13,8 @@ async function main(){
         
         console.log("Deploying contracts...");
         const contract = await contractFactory.deploy();
-        
+        await contract.deploymentTransaction().wait(2);
+        console.log(`contract : ${contract}`);
         let currentFavoriteNumber = await contract.retrieve();
         console.log(`Current Favorite Number: ${currentFavoriteNumber}`);
         
